@@ -1,0 +1,21 @@
+/*Film Category, revenues, by 3 Rental Rates & corresponding Film Count */
+
+	SELECT 
+		C.name,
+		SUM(PY.amount) AS revenues,
+		F.rental_rate,
+		COUNT(DISTINCT F.film_id) AS film_count
+	FROM	
+	film F
+	INNER JOIN inventory I ON F.film_id = I.film_id
+	INNER JOIN rental R ON I.inventory_id = R.inventory_id
+	INNER JOIN payment PY ON R.rental_id = PY.rental_id
+	INNER JOIN film_category FC ON F.film_id = FC.film_id
+	INNER JOIN category C ON FC.category_id = C.category_id	
+	GROUP BY 
+		C.name,
+		F.rental_rate
+	ORDER BY 
+		C.name, F.rental_rate, film_count DESC
+	;
+	
