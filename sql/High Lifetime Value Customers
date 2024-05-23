@@ -1,0 +1,18 @@
+/*Where are customers with a high lifetime value based?
+Country, Customer Names, Total Value*/
+
+SELECT
+    CO.country,
+    CONCAT(CU.first_name, ' ', CU.last_name) AS customers,
+    SUM(PY.amount) AS total_value
+FROM
+    payment PY
+    INNER JOIN customer CU ON PY.customer_id = CU.customer_id
+    INNER JOIN address A ON CU.address_id = A.address_id
+    INNER JOIN city CI ON A.city_id = CI.city_id
+    INNER JOIN country CO ON CI.country_id = CO.country_id
+GROUP BY 
+    CO.country,
+    CONCAT(CU.first_name, ' ', CU.last_name)
+ORDER BY
+    total_value DESC;
