@@ -1,0 +1,15 @@
+/*Which countries are Rockbuster customers based in country name*/
+
+SELECT
+	CO.country,
+	COUNT(CONCAT( CU.first_name, ' ', CU.last_name)) AS number_of_customers
+FROM
+	customer CU
+	INNER JOIN address A ON CU.address_id = A.address_id
+	INNER JOIN city CI ON A.city_id = CI.city_id
+	INNER JOIN country CO ON CI.country_id = CO.country_id
+GROUP BY 
+	CO.country
+ORDER BY
+	number_of_customers DESC
+;
