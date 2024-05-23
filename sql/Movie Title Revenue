@@ -1,0 +1,14 @@
+/*Which movies contributed the least to revenue gain*/
+SELECT
+	F.title AS "Movie Title",
+	SUM(PY.amount) AS "Total Revenue"
+FROM
+	film F
+	INNER JOIN inventory I ON F.film_id = I.film_id
+	INNER JOIN rental R ON I.inventory_id = R.inventory_id
+	INNER JOIN payment PY ON R.rental_id = PY.rental_id
+GROUP BY
+	F.title
+ORDER BY
+	"Total Revenue" ASC
+;
