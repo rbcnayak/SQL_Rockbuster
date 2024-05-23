@@ -1,0 +1,37 @@
+/*Do sales figures vary between geographic regions?*/
+
+
+SELECT
+    CASE
+        WHEN CO.country IN ('Algeria', 'Angola', 'Cameroon', 'Chad', 'Egypt', 'Ethiopia', 'Gambia', 'Kenya', 'Madagascar', 'Malawi',
+							'Morocco', 'Mozambique', 'Nigeria', 'Senegal', 'South Africa', 'Sudan', 'Tanzania', 'Tunisia',
+							'Zambia') THEN 'Africa'
+        WHEN CO.country IN ('Afghanistan', 'Armenia', 'Azerbaijan', 'Bahrain', 'Bangladesh', 'Brunei', 'Cambodia', 'China',
+							'Congo, The Democratic Republic of the', 'Hong Kong', 'India', 'Indonesia', 'Iran', 'Iraq', 'Israel',
+							'Japan', 'Kazakstan', 'Kuwait', 'Malaysia', 'Myanmar', 'Nepal', 'North Korea', 'Oman', 'Pakistan', 
+							'Philippines', 'Saudi Arabia', 'South Korea', 'Sri Lanka', 'Taiwan', 'Thailand', 'Turkey', 
+							'Turkmenistan', 'United Arab Emirates', 'Vietnam', 'Yemen') THEN 'Asia'
+        WHEN CO.country IN ('Nauru', 'New Zealand', 'Saint Vincent and the Grenadines', 'Tonga', 'Tuvalu') THEN 'Australia & Oceania'
+        WHEN CO.country IN ('Anguilla', 'Austria', 'Belarus', 'Bulgaria', 'Czech Republic', 'Estonia', 'Faroe Islands',
+							'Finland', 'France', 'French Guiana', 'French Polynesia', 'Germany', 'Greece', 
+							'Holy See (Vatican City State)', 'Hungary', 'Italy', 'Latvia', 'Liechtenstein', 'Lithuania', 
+							'Moldova', 'Netherlands', 'Poland', 'Romania', 'Runion', 'Russian Federation', 'Slovakia',
+							'Spain', 'Sweden', 'Switzerland', 'Ukraine', 'United Kingdom', 'Yugoslavia') THEN 'Europe'
+        WHEN CO.country IN ('American Samoa', 'Canada', 'Dominican Republic', 'Greenland', 'Mexico', 'Puerto Rico',
+							'United States', 'Virgin Islands, U.S.') THEN 'North America'
+        WHEN CO.country IN ('Argentina', 'Bolivia', 'Brazil', 'Chile', 'Colombia', 'Ecuador', 'Paraguay', 'Peru',
+							'Venezuela') THEN 'South America'
+        ELSE 'Rest of the World'
+    END AS continent,
+    SUM(PY.amount) AS total_sales,
+    COUNT (distinct CU.customer_id) AS number_of_customers
+FROM
+    payment PY
+    INNER JOIN customer CU ON PY.customer_id = CU.customer_id
+    INNER JOIN address A ON CU.address_id = A.address_id
+    INNER JOIN city CI ON A.city_id = CI.city_id
+    INNER JOIN country CO ON CI.country_id = CO.country_id
+GROUP BY continent
+ORDER BY number_of_customers DESC
+;
+	
