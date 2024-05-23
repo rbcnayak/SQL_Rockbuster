@@ -1,0 +1,26 @@
+/* Find the top 5 customers from the top 10 cities who’ve paid the highest total amounts to Rockbuster */
+
+	SELECT 
+		CU.customer_id,
+		CU.first_name, 
+		CU.last_name,
+		CO.country,
+		CI.city,
+		SUM(PY.amount) AS total_amount_paid
+	FROM customer CU
+	INNER JOIN payment PY ON CU.customer_id = PY.customer_id
+	INNER JOIN address A ON CU.address_id = A.address_id
+	INNER JOIN city CI ON A.city_id = CI.city_id
+	INNER JOIN country CO ON CI.country_id = CO.country_id
+	WHERE 
+		CO.country IN ('India', 'China', 'United States','Brazil', 'Japan', 'Mexico','Russian Federation', 'Philippines', 'Turkey', 'Indonesia')
+		GROUP BY 
+		CU.customer_id,
+		CU.first_name,
+		CU.last_name,
+		CO.country,
+		CI.city
+	ORDER BY 
+		total_amount_paid DESC
+	LIMIT 
+		5;
